@@ -1,5 +1,5 @@
 interface:
-  display_name: "Image Gen"
+  display_name: "GPT Image"
   short_description: "Generate or edit images for websites, games, and more"
   icon_small: "./assets/imagegen-small.svg"
   icon_large: "./assets/imagegen.png"
