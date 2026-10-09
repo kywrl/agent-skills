@@ -6,10 +6,27 @@
 
 ### 安装技能
 
-通过 [Vercel `skills` CLI](https://github.com/vercel-labs/skills) 从 GitHub 安装：
+需要先安装 Node.js（提供 `npx`）和 Git，然后通过 [Vercel `skills` CLI](https://github.com/vercel-labs/skills) 从 GitHub 安装：
 
 ```bash
 npx skills add kywrl/agent-skills --skill gpt-image
+```
+
+常用安装选项：
+
+- `--agent`（或 `-a`）：指定目标 Agent，名称格式见下表。
+- `--global`（或 `-g`）：安装到用户级目录，供当前用户的所有项目使用；不加该选项时默认安装到当前项目，请在目标项目根目录运行。
+
+| Agent | `--agent` 用法 |
+| --- | --- |
+| Codex | `--agent codex` |
+| Claude Code | `--agent claude-code` |
+| Command Code | `--agent command-code` |
+
+例如，将技能安装到 Codex 的用户级目录：
+
+```bash
+npx skills add kywrl/agent-skills --skill gpt-image --agent codex --global
 ```
 
 也可以直接使用仓库中的脚本：
