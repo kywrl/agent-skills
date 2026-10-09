@@ -28,9 +28,9 @@ The API protocol does not define transparent-output support consistently. Reques
 ## CLI examples
 
 ```sh
-python gpt-image/scripts/image_gen.py generate --prompt "A clean product photo of a blue glass bottle" --size 1024x1024 --quality high --out output/imagegen/bottle.png
-python gpt-image/scripts/image_gen.py edit --image photo.png --mask mask.png --prompt "Change only the marked background" --out output/imagegen/edited.png
-python gpt-image/scripts/image_gen.py generate --prompt "A simple test" --out output/imagegen/test.png --dry-run
+python gpt-image/scripts/image_gen.py generate --prompt "A clean product photo of a blue glass bottle" --size 1024x1024 --quality high --out output/gptimage/bottle.png
+python gpt-image/scripts/image_gen.py edit --image photo.png --mask mask.png --prompt "Change only the marked background" --out output/gptimage/edited.png
+python gpt-image/scripts/image_gen.py generate --prompt "A simple test" --out output/gptimage/test.png --dry-run
 ```
 
 The dry run prints the endpoint and request fields but never prints the key. It does not require a key or make a network request.

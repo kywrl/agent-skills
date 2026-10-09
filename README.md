@@ -37,7 +37,7 @@ python gpt-image/scripts/image_gen.py --help
 ### 生成图片
 
 ```bash
-python gpt-image/scripts/image_gen.py generate --prompt "清晨山间的一座木屋，柔和自然光，写实摄影" --size 1536x1024 --quality high --out output/imagegen/alpine-cabin.png
+python gpt-image/scripts/image_gen.py generate --prompt "清晨山间的一座木屋，柔和自然光，写实摄影" --size 1536x1024 --quality high --out output/gptimage/alpine-cabin.png
 ```
 
 常用参数：
@@ -46,14 +46,14 @@ python gpt-image/scripts/image_gen.py generate --prompt "清晨山间的一座�
 - `--size`：图片尺寸，默认 `auto`。
 - `--quality`：`low`、`medium`、`high` 或 `auto`，默认 `medium`。
 - `--n`：为同一提示词生成多个版本。
-- `--out`：输出文件路径，默认 `output/imagegen/output.png`。
+- `--out`：输出文件路径，默认 `output/gptimage/output.png`。
 - `--force`：允许覆盖已存在的输出文件。
 - `--dry-run`：只显示请求和输出路径，不调用 API。
 
 ### 编辑图片
 
 ```bash
-python gpt-image/scripts/image_gen.py edit --image input/photo.png --prompt "只将背景替换为暖色日落，保持主体不变" --out output/imagegen/sunset-edit.png
+python gpt-image/scripts/image_gen.py edit --image input/photo.png --prompt "只将背景替换为暖色日落，保持主体不变" --out output/gptimage/sunset-edit.png
 ```
 
 可重复使用 `--image` 提供多张输入图片，也可用 `--mask` 指定编辑蒙版。模型对蒙版和图像参数的支持有所不同，详见 [图像 API 参数](gpt-image/references/image-api.md)。
@@ -70,13 +70,13 @@ JSONL 文件每行描述一个生成任务：
 运行批处理时必须指定输出目录：
 
 ```bash
-python gpt-image/scripts/image_gen.py generate-batch --input prompts.jsonl --out-dir output/imagegen/batch --concurrency 5
+python gpt-image/scripts/image_gen.py generate-batch --input prompts.jsonl --out-dir output/gptimage/batch --concurrency 5
 ```
 
 ### 移除纯色背景
 
 ```bash
-python gpt-image/scripts/remove_chroma_key.py --input output/imagegen/subject-green-screen.png --out output/imagegen/subject-transparent.png --key-color "#00ff00" --soft-matte --spill-cleanup
+python gpt-image/scripts/remove_chroma_key.py --input output/gptimage/subject-green-screen.png --out output/gptimage/subject-transparent.png --key-color "#00ff00" --soft-matte --spill-cleanup
 ```
 
 该工具在本地处理图片，不调用图像生成 API；输出支持 PNG 和 WebP。
@@ -111,7 +111,7 @@ gpt-image/
 在仓库根目录运行 CLI。`--dry-run` 可用于检查参数解析、请求内容和输出路径，不需要密钥或安装依赖：
 
 ```bash
-python gpt-image/scripts/image_gen.py generate --prompt "本地预览" --out output/imagegen/preview.png --dry-run
+python gpt-image/scripts/image_gen.py generate --prompt "本地预览" --out output/gptimage/preview.png --dry-run
 ```
 
 验证真实 API 调用或修改去背逻辑时，按“使用”一节配置密钥并运行相应命令。脚本会自行管理隔离的运行时环境；依赖列表统一维护在 `gpt-image/requirements.txt`。

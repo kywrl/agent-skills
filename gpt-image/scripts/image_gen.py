@@ -31,7 +31,7 @@ DEFAULT_QUALITY = "medium"
 DEFAULT_OUTPUT_FORMAT = "png"
 DEFAULT_CONCURRENCY = 5
 DEFAULT_DOWNSCALE_SUFFIX = "-web"
-DEFAULT_OUTPUT_PATH = "output/imagegen/output.png"
+DEFAULT_OUTPUT_PATH = "output/gptimage/output.png"
 GPT_IMAGE_MODEL_PREFIX = "gpt-image-"
 
 ALLOWED_LEGACY_SIZES = {"1024x1024", "1536x1024", "1024x1536", "auto"}

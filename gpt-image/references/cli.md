@@ -27,13 +27,13 @@ Dry-run (no API call; no network required; does not require the `openai` package
 ```bash
 python "$IMAGE_GEN" generate \
   --prompt "Test" \
-  --out output/imagegen/test.png \
+  --out output/gptimage/test.png \
   --dry-run
 ```
 
 Notes:
 - One-off dry-runs print the API payload and the computed output path(s).
-- Repo-local finals should live under `output/imagegen/`.
+- Repo-local finals should live under `output/gptimage/`.
 
 Generate (requires an API key + network):
 
@@ -41,7 +41,7 @@ Generate (requires an API key + network):
 python "$IMAGE_GEN" generate \
   --prompt "A cozy alpine cabin at dawn" \
   --size 1024x1024 \
-  --out output/imagegen/alpine-cabin.png
+  --out output/gptimage/alpine-cabin.png
 ```
 
 Edit:
@@ -50,7 +50,7 @@ Edit:
 python "$IMAGE_GEN" edit \
   --image input.png \
   --prompt "Replace only the background with a warm sunset" \
-  --out output/imagegen/sunset-edit.png
+  --out output/gptimage/sunset-edit.png
 ```
 
 ## Guardrails
@@ -65,7 +65,7 @@ python "$IMAGE_GEN" edit \
 - Size: `auto`
 - Quality: `medium`
 - Output format: `png`
-- Default one-off output path: `output/imagegen/output.png`
+- Default one-off output path: `output/gptimage/output.png`
 - Background: unspecified unless `--background` is set
 
 ## gpt-image-2 size and model guidance
@@ -103,7 +103,7 @@ python "$IMAGE_GEN" generate \
   --prompt "A product thumbnail of a matte ceramic mug on a stone surface" \
   --quality low \
   --size 1024x1024 \
-  --out output/imagegen/mug-draft.png
+  --out output/gptimage/mug-draft.png
 ```
 
 Final 2K landscape:
@@ -113,7 +113,7 @@ python "$IMAGE_GEN" generate \
   --prompt "A polished landing-page hero image of a matte ceramic mug on a stone surface" \
   --quality high \
   --size 2048x1152 \
-  --out output/imagegen/mug-hero.png
+  --out output/gptimage/mug-hero.png
 ```
 
 4K landscape:
@@ -123,7 +123,7 @@ python "$IMAGE_GEN" generate \
   --prompt "A detailed architectural visualization at golden hour" \
   --size 3840x2160 \
   --quality high \
-  --out output/imagegen/architecture-4k.png
+  --out output/gptimage/architecture-4k.png
 ```
 
 True transparent output request:
@@ -136,7 +136,7 @@ python "$IMAGE_GEN" generate \
   --prompt "A clean product cutout on a transparent background" \
   --background transparent \
   --output-format png \
-  --out output/imagegen/product-cutout.png
+  --out output/gptimage/product-cutout.png
 ```
 
 Explain that CLI `gpt-image-2` does not support `background=transparent`, so transparent output requires the user-confirmed `gpt-image-1.5` model.
@@ -157,7 +157,7 @@ python "$IMAGE_GEN" edit \
   --prompt "Change only the background" \
   --quality high \
   --input-fidelity high \
-  --out output/imagegen/background-edit.png
+  --out output/gptimage/background-edit.png
 ```
 
 Mask notes:
@@ -171,8 +171,8 @@ Mask notes:
 - In the edit prompt, repeat invariants (`change only the background; keep the subject unchanged`) to reduce drift.
 
 ## Output handling
-- Use `tmp/imagegen/` for temporary JSONL inputs or scratch files.
-- Use `output/imagegen/` for final outputs.
+- Use `tmp/gptimage/` for temporary JSONL inputs or scratch files.
+- Use `output/gptimage/` for final outputs.
 - Reruns fail if a target file already exists unless you pass `--force`.
 - `--out-dir` changes one-off naming to `image_1.<ext>`, `image_2.<ext>`, and so on.
 - Downscaled copies use the default suffix `-web` unless you override it.
@@ -188,7 +188,7 @@ python "$IMAGE_GEN" generate \
   --style "clean product photography" \
   --composition "wide product shot with usable negative space for page copy" \
   --constraints "no logos, no text" \
-  --out output/imagegen/mug-hero.png
+  --out output/gptimage/mug-hero.png
 ```
 
 Generate + also write a downscaled copy for fast web loading:
@@ -198,24 +198,24 @@ python "$IMAGE_GEN" generate \
   --prompt "A cozy alpine cabin at dawn" \
   --size 1024x1024 \
   --downscale-max-dim 1024 \
-  --out output/imagegen/alpine-cabin.png
+  --out output/gptimage/alpine-cabin.png
 ```
 
 Generate multiple prompts concurrently (async batch):
 
 ```bash
-mkdir -p tmp/imagegen output/imagegen/batch
-cat > tmp/imagegen/prompts.jsonl << 'EOF'
+mkdir -p tmp/gptimage output/gptimage/batch
+cat > tmp/gptimage/prompts.jsonl << 'EOF'
 {"prompt":"Cavernous hangar interior with a compact shuttle parked near the center","use_case":"stylized-concept","composition":"wide-angle, low-angle","lighting":"volumetric light rays through drifting fog","constraints":"no logos or trademarks; no watermark","size":"1536x1024"}
 {"prompt":"Gray wolf in profile in a snowy forest","use_case":"photorealistic-natural","composition":"eye-level","constraints":"no logos or trademarks; no watermark","size":"1024x1024"}
 EOF
 
 python "$IMAGE_GEN" generate-batch \
-  --input tmp/imagegen/prompts.jsonl \
-  --out-dir output/imagegen/batch \
+  --input tmp/gptimage/prompts.jsonl \
+  --out-dir output/gptimage/batch \
   --concurrency 5
 
-rm -f tmp/imagegen/prompts.jsonl
+rm -f tmp/gptimage/prompts.jsonl
 ```
 
 Notes:

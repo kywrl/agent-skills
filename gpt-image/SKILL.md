@@ -24,7 +24,7 @@ Rules:
 - Do not silently switch endpoints, models, or omit user-required parameters after an API error. Explain the provider limitation and ask when a change is required.
 - Live CLI requests require network access and an API key in `gpt_image.api_key` in `~/.agent-skills/config.json`. The CLI creates this user-level configuration file on first invocation if it does not exist. On first live use, the bundled launcher creates a private virtual environment in the user's cache and installs the skill's Python dependencies there. This does not modify the system Python, a project environment, or Codex's own runtime.
 - Do not create one-off SDK runners. Preserve upstream CLI behavior and the local provider configuration when updating the script.
-- Save final project assets under `output/imagegen/` by default, or at the user's requested path. Do not overwrite existing files unless requested; otherwise use a versioned sibling filename.
+- Save final project assets under `output/gptimage/` by default, or at the user's requested path. Do not overwrite existing files unless requested; otherwise use a versioned sibling filename.
 
 Shared prompt guidance lives in `references/prompting.md` and `references/sample-prompts.md`.
 
@@ -259,8 +259,8 @@ Popular `gpt-image-2` sizes:
 
 ### Temp and output conventions
 These conventions apply to script outputs.
-- Use `tmp/imagegen/` for intermediate files (for example JSONL batches); delete them when done.
-- Write final artifacts under `output/imagegen/`.
+- Use `tmp/gptimage/` for intermediate files (for example JSONL batches); delete them when done.
+- Write final artifacts under `output/gptimage/`.
 - Use `--out` or `--out-dir` to control output paths; keep filenames stable and descriptive.
 
 ### Dependencies and first use
