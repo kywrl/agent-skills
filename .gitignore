@@ -1,0 +1,34 @@
+# Python 缓存与字节码
+__pycache__/
+*.py[cod]
+*$py.class
+
+# 虚拟环境
+.venv/
+venv/
+env/
+ENV/
+
+# 环境变量与密钥
+.env
+.env.*
+!.env.example
+
+# Python 打包产物
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# 工具缓存
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# 临时文件与系统文件
+/tmp/
+.DS_Store
+Thumbs.db
+Desktop.ini

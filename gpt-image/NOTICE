@@ -1,0 +1,3 @@
+This skill is adapted from the OpenAI imagegen skill, which is distributed under the Apache License, Version 2.0. See LICENSE.txt.
+
+This adaptation adds a provider-configurable OpenAI-compatible Images API CLI and updates the skill instructions for use across agents that support the SKILL.md format.
