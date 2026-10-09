@@ -16,6 +16,8 @@ from statistics import median
 import sys
 from typing import Tuple
 
+from _runtime import ensure_skill_environment
+
 
 Color = Tuple[int, int, int]
 KEY_DOMINANCE_THRESHOLD = 16.0
@@ -29,10 +31,9 @@ def _die(message: str, code: int = 1) -> None:
 
 def _dependency_hint(package: str) -> str:
     return (
-        "Activate the repo-selected environment first, then install it with "
-        f"`uv pip install {package}`. If this repo uses a local virtualenv, start with "
-        "`source .venv/bin/activate`; otherwise use this repo's configured shared fallback "
-        "environment."
+        f"The gpt-image skill installs {package} in its private environment on first use. "
+        "Check that Python venv/pip support and package download access are available, "
+        "then retry. The skill does not install into the project or global Python."
     )
 
 
@@ -443,6 +444,7 @@ def main() -> None:
     parser = _build_parser()
     args = parser.parse_args()
     _validate_args(args)
+    ensure_skill_environment(Path(__file__), sys.argv[1:])
     _remove_chroma_key(args)
 
 

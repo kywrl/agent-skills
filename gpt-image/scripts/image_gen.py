@@ -20,6 +20,8 @@ from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 from io import BytesIO
 
+from _runtime import ensure_skill_environment
+
 DEFAULT_MODEL = os.getenv("GPT_IMAGE_MODEL") or "gpt-image-2"
 DEFAULT_BASE_URL = (
     os.getenv("GPT_IMAGE_BASE_URL") or "https://api.openai.com/v1"
@@ -56,14 +58,11 @@ def _warn(message: str) -> None:
     print(f"Warning: {message}", file=sys.stderr)
 
 
-def _dependency_hint(package: str, *, upgrade: bool = False) -> str:
-    command = f"uv pip install {'-U ' if upgrade else ''}{package}"
+def _dependency_hint(package: str) -> str:
     return (
-        "Activate the repo-selected environment first, then install it with "
-        f"`{command}`. If this repo uses a local virtualenv, start with "
-        "`source .venv/bin/activate`; otherwise use this repo's configured shared fallback "
-        "environment. If your project declares dependencies, prefer that project's normal "
-        "`uv sync` flow."
+        f"The gpt-image skill installs {package} in its private environment on first use. "
+        "Check that Python venv/pip support and package download access are available, "
+        "then retry. The skill does not install into the project or global Python."
     )
 
 
@@ -441,7 +440,7 @@ def _create_async_client(args: argparse.Namespace):
             )
         _die(
             "AsyncOpenAI not available in this openai SDK version. "
-            f"{_dependency_hint('openai', upgrade=True)}"
+            f"{_dependency_hint('openai')}"
         )
     return AsyncOpenAI(api_key=_effective_api_key(args), base_url=args.base_url)
 
@@ -1034,6 +1033,9 @@ def main() -> int:
         input_fidelity=getattr(args, "input_fidelity", None),
     )
     _ensure_api_key(args.dry_run, _effective_api_key(args))
+
+    if not args.dry_run:
+        ensure_skill_environment(Path(__file__), sys.argv[1:])
 
     args.func(args)
     return 0

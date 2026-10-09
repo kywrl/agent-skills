@@ -9,7 +9,7 @@ This file documents how to use the bundled CLI. Read it for command details, mod
 - `edit`: edit one or more existing images
 - `generate-batch`: run many generation jobs from a JSONL file
 
-Real API calls require **network access** + `GPT_IMAGE_API_KEY` or `OPENAI_API_KEY`. `GPT_IMAGE_API_KEY` takes precedence. `--dry-run` does not require a key or network access.
+Real API calls require **network access** + `GPT_IMAGE_API_KEY` or `OPENAI_API_KEY`. `GPT_IMAGE_API_KEY` takes precedence. The first live use also downloads the Python dependencies into the skill's private environment. `--dry-run` does not require a key, network access, or installed dependencies.
 
 ## Quick start (from the project root)
 Set a path to the skill CLI:
@@ -18,7 +18,7 @@ Set a path to the skill CLI:
 export IMAGE_GEN="gpt-image/scripts/image_gen.py"
 ```
 
-Install dependencies into that environment with its package manager. In uv-managed environments, `uv pip install ...` remains the preferred path.
+On the first live command, the CLI automatically creates a private virtual environment in the user cache and installs `openai` and `Pillow`. The first setup needs network access. It does not modify the active project or system Python environment. `--dry-run` does not install packages.
 
 ## Quick start
 
@@ -54,7 +54,7 @@ python "$IMAGE_GEN" edit \
 ```
 
 ## Guardrails
-- Use the bundled CLI directly (`python "$IMAGE_GEN" ...`) after activating the correct environment.
+- Use the bundled CLI directly (`python "$IMAGE_GEN" ...`); it provisions and selects its isolated environment automatically for live calls.
 - Do **not** create one-off runners (for example `gen_images.py`) unless the user explicitly asks for a custom wrapper.
 - The local CLI accepts `GPT_IMAGE_BASE_URL`, `GPT_IMAGE_API_KEY`, and `GPT_IMAGE_MODEL`; CLI flags can override each value. See `references/api-compatibility.md`.
 - Do not silently downgrade from `gpt-image-2` to `gpt-image-1.5`; ask first unless the user explicitly requested `gpt-image-1.5`.

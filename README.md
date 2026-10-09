@@ -21,16 +21,12 @@ npx skills add kywrl/agent-skills --skill gpt-image
 ## 环境要求
 
 - Python 3.9 或更高版本
-- 生成或编辑图片时需要安装 `openai` Python SDK，并可访问所配置的 API 服务
-- 图片缩放或色键去背景功能需要安装 `Pillow`
+- 首次生成、编辑图片或运行色键去背景功能时，需要联网下载 Python 依赖
+- 生成或编辑图片仍需要配置 `GPT_IMAGE_API_KEY` 或 `OPENAI_API_KEY`
 
-安装依赖：
+技能首次运行时会在当前操作系统用户的缓存目录中创建独立虚拟环境，并自动安装 `openai` 和 `Pillow`。后续运行会复用该环境；不会改动系统 Python、项目虚拟环境或 Codex CLI / Desktop 自身的运行环境。CLI 和 Desktop 同时首次启动时会安全串行完成初始化。
 
-```bash
-python -m pip install openai Pillow
-```
-
-若只使用 `--dry-run` 查看请求内容，无需 API 密钥、网络连接或 `openai` SDK。
+若只使用 `--dry-run` 查看请求内容，无需 API 密钥、网络连接或安装这些依赖。
 
 ## 配置 API
 
