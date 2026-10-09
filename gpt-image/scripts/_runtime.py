@@ -146,4 +146,10 @@ def ensure_skill_environment(script: Path, arguments: list[str]) -> None:
         raise SystemExit(1) from exc
 
     python = _python_in(environment)
-    os.execv(str(python), [str(python), str(script.resolve()), *arguments])
+    command = [str(python), str(script.resolve()), *arguments]
+    if os.name == "nt":
+        # Windows emulates execv by spawning a child process. Wait for it so
+        # callers keep the CLI's output and exit status until it completes.
+        completed = subprocess.run(command)
+        raise SystemExit(completed.returncode)
+    os.execv(str(python), command)
