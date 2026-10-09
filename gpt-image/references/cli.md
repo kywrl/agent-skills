@@ -56,7 +56,7 @@ python "$IMAGE_GEN" edit \
 ## Guardrails
 - Use the bundled CLI directly (`python "$IMAGE_GEN" ...`); it provisions and selects its isolated environment automatically for live calls.
 - Do **not** create one-off runners (for example `gen_images.py`) unless the user explicitly asks for a custom wrapper.
-- The local CLI reads `base_url`, `api_key`, and `model` from `~/.agent-skills/config.json`; CLI flags can override each value. See `references/api-compatibility.md`.
+- The local CLI reads `gpt_image.base_url`, `gpt_image.api_key`, and `gpt_image.model` from `~/.agent-skills/config.json`; CLI flags can override each value. See `references/api-compatibility.md`.
 - Do not silently downgrade from `gpt-image-2` to `gpt-image-1.5`; ask first unless the user explicitly requested `gpt-image-1.5`.
 
 ## Defaults

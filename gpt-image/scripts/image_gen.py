@@ -69,7 +69,7 @@ def _load_user_config() -> Dict[str, Any]:
         if not CONFIG_PATH.exists():
             try:
                 with CONFIG_PATH.open("x", encoding="utf-8", newline="\n") as f:
-                    json.dump(defaults, f, indent=2)
+                    json.dump({"gpt_image": defaults}, f, indent=2)
                     f.write("\n")
                 if os.name != "nt":
                     CONFIG_PATH.chmod(0o600)
@@ -87,7 +87,11 @@ def _load_user_config() -> Dict[str, Any]:
     if not isinstance(config, dict):
         _die(f"Configuration file must contain a JSON object: {CONFIG_PATH}")
 
-    merged = {**defaults, **config}
+    image_config = config.get("gpt_image", {})
+    if not isinstance(image_config, dict):
+        _die(f"Configuration section 'gpt_image' must be a JSON object: {CONFIG_PATH}")
+
+    merged = {**defaults, **image_config}
     for key in ("api_key", "base_url", "model"):
         if not isinstance(merged.get(key), str):
             _die(f"Configuration field '{key}' must be a string: {CONFIG_PATH}")

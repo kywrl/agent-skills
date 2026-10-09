@@ -13,9 +13,11 @@ Example configuration (this file is in the user's home directory, outside the in
 
 ```json
 {
-  "api_key": "...",
-  "base_url": "https://api.example.com/v1",
-  "model": "provider-image-model"
+  "gpt_image": {
+    "api_key": "...",
+    "base_url": "https://api.example.com/v1",
+    "model": "provider-image-model"
+  }
 }
 ```
 

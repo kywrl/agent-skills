@@ -34,15 +34,17 @@ npx skills add kywrl/agent-skills --skill gpt-image
 
 ```json
 {
-  "api_key": "",
-  "base_url": "https://api.openai.com/v1",
-  "model": "gpt-image-2"
+  "gpt_image": {
+    "api_key": "YOUR_API_KEY",
+    "base_url": "https://api.openai.com/v1",
+    "model": "gpt-image-2"
+  }
 }
 ```
 
-将 `api_key` 替换为你的 API 密钥；使用 OpenAI 兼容接口时，也可修改 `base_url` 和 `model`。`base_url` 应为接口根地址，不要附加 `/images/generations` 或 `/images/edits`。命令行参数 `--api-key`、`--base-url` 和 `--model` 可分别覆盖文件中的对应值。脚本不读取 `GPT_IMAGE_API_KEY`、`OPENAI_API_KEY`、`GPT_IMAGE_BASE_URL` 或 `GPT_IMAGE_MODEL` 环境变量。
+将 `gpt_image.api_key` 替换为你的 API 密钥；使用 OpenAI 兼容接口时，也可修改 `gpt_image.base_url` 和 `gpt_image.model`。`base_url` 应为接口根地址，不要附加 `/images/generations` 或 `/images/edits`。命令行参数 `--api-key`、`--base-url` 和 `--model` 可分别覆盖文件中的对应值。脚本不读取 `GPT_IMAGE_API_KEY`、`OPENAI_API_KEY`、`GPT_IMAGE_BASE_URL` 或 `GPT_IMAGE_MODEL` 环境变量。
 
-配置文件必须是 JSON 对象，且 `api_key`、`base_url`、`model` 的值都必须是字符串；`base_url` 和 `model` 不能为空。请勿将真实密钥提交到版本库。使用 `--dry-run` 时可以不配置 API 密钥。
+配置文件必须是 JSON 对象，且 `gpt_image.api_key`、`gpt_image.base_url`、`gpt_image.model` 的值都必须是字符串；`gpt_image.base_url` 和 `gpt_image.model` 不能为空。请勿将真实密钥提交到版本库。使用 `--dry-run` 时可以不配置 API 密钥。
 
 ## 使用方法
 
