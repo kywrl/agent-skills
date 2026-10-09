@@ -10,6 +10,14 @@
 - `gpt-image/references/`：CLI、API 参数、提示词和网络配置说明。
 - `gpt-image/assets/`：工具相关图片资源。
 
+## 通过 skills CLI 安装
+
+本项目可通过 Vercel `skills` CLI 从 GitHub 直接安装：
+
+```bash
+npx skills add kywrl/ai-image-generation --skill gpt-image
+```
+
 ## 环境要求
 
 - Python 3.9 或更高版本
