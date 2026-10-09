@@ -30,28 +30,19 @@ npx skills add kywrl/agent-skills --skill gpt-image
 
 ## 配置 API
 
-设置 `GPT_IMAGE_API_KEY`，也可以使用 `OPENAI_API_KEY`。如果两个变量都设置，`GPT_IMAGE_API_KEY` 优先。默认接口地址为 `https://api.openai.com/v1`，默认模型为 `gpt-image-2`。
+`image_gen.py` 从用户主目录下的 `~/.agent-skills/config.json` 读取默认配置。首次运行时会自动创建该文件，初始内容如下：
 
-PowerShell：
-
-```powershell
-$env:GPT_IMAGE_API_KEY = "你的 API 密钥"
+```json
+{
+  "api_key": "",
+  "base_url": "https://api.openai.com/v1",
+  "model": "gpt-image-2"
+}
 ```
 
-macOS / Linux：
+将 `api_key` 替换为你的 API 密钥；使用 OpenAI 兼容接口时，也可修改 `base_url` 和 `model`。`base_url` 应为接口根地址，不要附加 `/images/generations` 或 `/images/edits`。命令行参数 `--api-key`、`--base-url` 和 `--model` 可分别覆盖文件中的对应值。脚本不读取 `GPT_IMAGE_API_KEY`、`OPENAI_API_KEY`、`GPT_IMAGE_BASE_URL` 或 `GPT_IMAGE_MODEL` 环境变量。
 
-```bash
-export GPT_IMAGE_API_KEY="你的 API 密钥"
-```
-
-使用兼容接口时，可设置接口根地址和模型。根地址不要附加 `/images/generations` 或 `/images/edits`：
-
-```powershell
-$env:GPT_IMAGE_BASE_URL = "https://api.example.com/v1"
-$env:GPT_IMAGE_MODEL = "provider-image-model"
-```
-
-也可通过 CLI 参数 `--api-key`、`--base-url` 和 `--model` 覆盖对应配置。请勿将真实密钥提交到版本库。
+配置文件必须是 JSON 对象，且 `api_key`、`base_url`、`model` 的值都必须是字符串；`base_url` 和 `model` 不能为空。请勿将真实密钥提交到版本库。使用 `--dry-run` 时可以不配置 API 密钥。
 
 ## 使用方法
 

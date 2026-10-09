@@ -2,27 +2,21 @@
 
 The included CLI targets the common OpenAI-compatible image API shape:
 
-- Generate: `POST {GPT_IMAGE_BASE_URL}/images/generations`
-- Edit: `POST {GPT_IMAGE_BASE_URL}/images/edits` as `multipart/form-data`
+- Generate: `POST {base_url}/images/generations`
+- Edit: `POST {base_url}/images/edits` as `multipart/form-data`
 - Authentication: `Authorization: Bearer <key>`
 - Results: `data[]` entries containing `b64_json` or `url`
 
-`GPT_IMAGE_BASE_URL` is the API root, commonly ending in `/v1`; do not include `/images/generations` in the value. Trailing slashes are removed. The CLI sends `GPT_IMAGE_API_KEY` as `Authorization: Bearer <key>`; it takes precedence over `OPENAI_API_KEY`. `GPT_IMAGE_MODEL` sets the default model and may be overridden with `--model`. The CLI also accepts `--base-url` and `--api-key` overrides.
+The CLI reads its API settings from `~/.agent-skills/config.json`, creating a default file on first invocation. `base_url` is the API root, commonly ending in `/v1`; do not include `/images/generations` in the value. Trailing slashes are removed. `api_key` is sent as `Authorization: Bearer <key>`. `model` sets the default model. The CLI flags `--base-url`, `--api-key`, and `--model` override the corresponding values.
 
-Example configuration in a shell session (keep real keys out of checked-in files):
+Example configuration (this file is in the user's home directory, outside the installed skill and project):
 
-```sh
-export GPT_IMAGE_BASE_URL="https://api.example.com/v1"
-export GPT_IMAGE_API_KEY="..."
-export GPT_IMAGE_MODEL="provider-image-model"
-```
-
-PowerShell:
-
-```powershell
-$env:GPT_IMAGE_BASE_URL = "https://api.example.com/v1"
-$env:GPT_IMAGE_API_KEY = "..."
-$env:GPT_IMAGE_MODEL = "provider-image-model"
+```json
+{
+  "api_key": "...",
+  "base_url": "https://api.example.com/v1",
+  "model": "provider-image-model"
+}
 ```
 
 Compatibility varies by provider and model. Optional fields such as `quality`, `size`, `n`, `output_format`, and edit `mask` are not universally supported. Consult the provider's API documentation and omit unsupported options. The script does not silently change endpoints, models, or parameters. URL results are fetched without forwarding the API key to the result host.

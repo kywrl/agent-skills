@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """CLI for image generation and editing with OpenAI-compatible image APIs.
 
-Defaults to gpt-image-2 and a structured prompt augmentation workflow. The API
-root, key, and default model can be configured with GPT_IMAGE_* environment variables.
+Defaults to gpt-image-2 and a structured prompt augmentation workflow. API
+credentials and defaults are read from ~/.agent-skills/config.json.
 """
 
 from __future__ import annotations
@@ -22,10 +22,10 @@ from io import BytesIO
 
 from _runtime import ensure_skill_environment
 
-DEFAULT_MODEL = os.getenv("GPT_IMAGE_MODEL") or "gpt-image-2"
-DEFAULT_BASE_URL = (
-    os.getenv("GPT_IMAGE_BASE_URL") or "https://api.openai.com/v1"
-).rstrip("/")
+DEFAULT_MODEL = "gpt-image-2"
+DEFAULT_BASE_URL = "https://api.openai.com/v1"
+CONFIG_PATH = Path.home() / ".agent-skills" / "config.json"
+USER_CONFIG: Dict[str, Any] = {}
 DEFAULT_SIZE = "auto"
 DEFAULT_QUALITY = "medium"
 DEFAULT_OUTPUT_FORMAT = "png"
@@ -58,6 +58,49 @@ def _warn(message: str) -> None:
     print(f"Warning: {message}", file=sys.stderr)
 
 
+def _load_user_config() -> Dict[str, Any]:
+    defaults = {
+        "api_key": "",
+        "base_url": DEFAULT_BASE_URL,
+        "model": DEFAULT_MODEL,
+    }
+    try:
+        CONFIG_PATH.parent.mkdir(parents=True, exist_ok=True)
+        if not CONFIG_PATH.exists():
+            try:
+                with CONFIG_PATH.open("x", encoding="utf-8", newline="\n") as f:
+                    json.dump(defaults, f, indent=2)
+                    f.write("\n")
+                if os.name != "nt":
+                    CONFIG_PATH.chmod(0o600)
+                print(f"Created configuration file: {CONFIG_PATH}", file=sys.stderr)
+            except FileExistsError:
+                pass
+
+        with CONFIG_PATH.open("r", encoding="utf-8") as f:
+            config = json.load(f)
+    except json.JSONDecodeError as exc:
+        _die(f"Invalid JSON in configuration file {CONFIG_PATH}: {exc}")
+    except OSError as exc:
+        _die(f"Could not read or create configuration file {CONFIG_PATH}: {exc}")
+
+    if not isinstance(config, dict):
+        _die(f"Configuration file must contain a JSON object: {CONFIG_PATH}")
+
+    merged = {**defaults, **config}
+    for key in ("api_key", "base_url", "model"):
+        if not isinstance(merged.get(key), str):
+            _die(f"Configuration field '{key}' must be a string: {CONFIG_PATH}")
+    if not merged["base_url"].strip():
+        _die(f"Configuration field 'base_url' must not be empty: {CONFIG_PATH}")
+    if not merged["model"].strip():
+        _die(f"Configuration field 'model' must not be empty: {CONFIG_PATH}")
+    merged["api_key"] = merged["api_key"].strip() or None
+    merged["base_url"] = merged["base_url"].strip().rstrip("/")
+    merged["model"] = merged["model"].strip()
+    return merged
+
+
 def _dependency_hint(package: str) -> str:
     return (
         f"The gpt-image skill installs {package} in its private environment on first use. "
@@ -67,11 +110,7 @@ def _dependency_hint(package: str) -> str:
 
 
 def _effective_api_key(args: argparse.Namespace) -> Optional[str]:
-    return (
-        args.api_key
-        or os.getenv("GPT_IMAGE_API_KEY")
-        or os.getenv("OPENAI_API_KEY")
-    )
+    return args.api_key or USER_CONFIG.get("api_key")
 
 
 def _ensure_api_key(dry_run: bool, api_key: Optional[str]) -> None:
@@ -79,9 +118,9 @@ def _ensure_api_key(dry_run: bool, api_key: Optional[str]) -> None:
         print("API key is set.", file=sys.stderr)
         return
     if dry_run:
-        _warn("GPT_IMAGE_API_KEY / OPENAI_API_KEY is not set; dry-run only.")
+        _warn(f"api_key is not set in {CONFIG_PATH}; dry-run only.")
         return
-    _die("Set GPT_IMAGE_API_KEY or OPENAI_API_KEY before running.")
+    _die(f"Set 'api_key' in {CONFIG_PATH} before running.")
 
 
 def _read_prompt(prompt: Optional[str], prompt_file: Optional[str]) -> str:
@@ -936,9 +975,9 @@ class _FileBundle:
 
 
 def _add_shared_args(parser: argparse.ArgumentParser) -> None:
-    parser.add_argument("--model", default=DEFAULT_MODEL)
-    parser.add_argument("--base-url", default=DEFAULT_BASE_URL)
-    parser.add_argument("--api-key", help="override GPT_IMAGE_API_KEY; avoid shell history")
+    parser.add_argument("--model")
+    parser.add_argument("--base-url")
+    parser.add_argument("--api-key", help="override api_key in ~/.agent-skills/config.json")
     parser.add_argument("--prompt")
     parser.add_argument("--prompt-file")
     parser.add_argument("--n", type=int, default=1)
@@ -1005,6 +1044,10 @@ def main() -> int:
     edit_parser.set_defaults(func=_edit)
 
     args = parser.parse_args()
+    global USER_CONFIG
+    USER_CONFIG = _load_user_config()
+    args.model = args.model or USER_CONFIG["model"]
+    args.base_url = (args.base_url or USER_CONFIG["base_url"]).rstrip("/")
     if args.n < 1 or args.n > 10:
         _die("--n must be between 1 and 10")
     if getattr(args, "concurrency", 1) < 1 or getattr(args, "concurrency", 1) > 25:

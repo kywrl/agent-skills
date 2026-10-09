@@ -22,7 +22,7 @@ Rules:
 - Preserve the upstream intent classification, image-type taxonomy, prompt guidance, constraints, and output review workflow.
 - For transparent output, follow the selected provider/model's documented support. Never silently switch from `gpt-image-2` to `gpt-image-1.5`; ask first unless the user explicitly requested `gpt-image-1.5`.
 - Do not silently switch endpoints, models, or omit user-required parameters after an API error. Explain the provider limitation and ask when a change is required.
-- Live CLI requests require network access and `GPT_IMAGE_API_KEY` or `OPENAI_API_KEY`. On first live use, the bundled launcher creates a private virtual environment in the user's cache and installs the skill's Python dependencies there. This does not modify the system Python, a project environment, or Codex's own runtime.
+- Live CLI requests require network access and an API key in `~/.agent-skills/config.json`. The CLI creates this user-level configuration file on first invocation if it does not exist. On first live use, the bundled launcher creates a private virtual environment in the user's cache and installs the skill's Python dependencies there. This does not modify the system Python, a project environment, or Codex's own runtime.
 - Do not create one-off SDK runners. Preserve upstream CLI behavior and the local provider configuration when updating the script.
 - Save final project assets under `output/imagegen/` by default, or at the user's requested path. Do not overwrite existing files unless requested; otherwise use a versioned sibling filename.
 
@@ -34,12 +34,12 @@ CLI resources:
 - `references/network.md`
 - `scripts/image_gen.py`
 
-CLI API configuration:
+CLI API configuration is read from `~/.agent-skills/config.json`:
 
-- `GPT_IMAGE_BASE_URL`: API root, default `https://api.openai.com/v1`. Do not include `/images/generations` or `/images/edits`.
-- `GPT_IMAGE_API_KEY`: API key; takes precedence over `OPENAI_API_KEY`.
-- `GPT_IMAGE_MODEL`: default model, `gpt-image-2` when unset. It may name a provider-specific model when using a compatible custom endpoint.
-- CLI flags `--base-url`, `--api-key`, and `--model` override the corresponding environment settings.
+- `api_key`: API key.
+- `base_url`: API root, default `https://api.openai.com/v1`. Do not include `/images/generations` or `/images/edits`.
+- `model`: default model, `gpt-image-2` when unset. It may name a provider-specific model when using a compatible custom endpoint.
+- CLI flags `--base-url`, `--api-key`, and `--model` override the corresponding config values.
 - These settings configure the bundled script and are independent of the agent's own image tools or settings.
 - For configuration examples and endpoint details, read [references/api-compatibility.md](references/api-compatibility.md).
 
@@ -268,13 +268,13 @@ These conventions apply to script outputs.
 - Requires Python 3.9 or newer. The first live image generation/edit or chroma-key removal creates an isolated environment in the operating-system user cache and installs `openai` and `Pillow` automatically.
 - The first setup requires network access to download packages. Later calls reuse the cached environment. Concurrent first use from Codex CLI and Codex Desktop is serialized safely.
 - `--dry-run` does not install packages and does not require an API key.
-- This environment is separate from the user's global Python, project virtual environments, Codex CLI, and Codex Desktop. The skill still needs `GPT_IMAGE_API_KEY` or `OPENAI_API_KEY` for live API calls.
+- This environment is separate from the user's global Python, project virtual environments, Codex CLI, and Codex Desktop. The skill reads API configuration from `~/.agent-skills/config.json`, outside the skill installation directory.
 
 ### Environment
-- `GPT_IMAGE_API_KEY` must be set for live API calls; `OPENAI_API_KEY` is accepted as a fallback. `GPT_IMAGE_BASE_URL` and `GPT_IMAGE_MODEL` optionally select a compatible API root and model.
+- `~/.agent-skills/config.json` must contain a valid `api_key` for live API calls. `base_url` and `model` optionally select a compatible API root and model.
 - Never ask the user to paste the full key in chat. Ask them to set it locally and confirm when ready.
 
-If the key is missing, ask the user to set `GPT_IMAGE_API_KEY` locally (or `OPENAI_API_KEY` when using the default OpenAI endpoint). For OpenAI, keys can be created at https://platform.openai.com/api-keys. Offer OS/shell-specific setup help when useful.
+If the key is missing, ask the user to add it to `~/.agent-skills/config.json`; do not ask them to paste the full key in chat. For OpenAI, keys can be created at https://platform.openai.com/api-keys.
 
 If automatic setup fails, explain that the skill needs a working Python installation with `venv`/`pip` and package download access. Do not install packages into the user's global or project Python environment as a fallback.
 

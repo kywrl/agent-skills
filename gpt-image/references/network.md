@@ -1,6 +1,6 @@
 # Network access and sandbox notes
 
-The bundled CLI sends requests to `GPT_IMAGE_BASE_URL` and downloads image results when the provider returns URLs. It needs outbound HTTPS access to the configured API host and, for URL-based results, the result host.
+The bundled CLI sends requests to the `base_url` configured in `~/.agent-skills/config.json` and downloads image results when the provider returns URLs. It needs outbound HTTPS access to the configured API host and, for URL-based results, the result host.
 
 Some agent environments run commands in a sandbox that blocks network access or asks for approval. Follow the host agent's network and command-approval controls. Approval settings and network access are separate in some environments; approving a command does not necessarily enable network access.
 

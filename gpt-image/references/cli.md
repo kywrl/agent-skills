@@ -9,7 +9,7 @@ This file documents how to use the bundled CLI. Read it for command details, mod
 - `edit`: edit one or more existing images
 - `generate-batch`: run many generation jobs from a JSONL file
 
-Real API calls require **network access** + `GPT_IMAGE_API_KEY` or `OPENAI_API_KEY`. `GPT_IMAGE_API_KEY` takes precedence. The first live use also downloads the Python dependencies into the skill's private environment. `--dry-run` does not require a key, network access, or installed dependencies.
+Real API calls require **network access** + an API key in `~/.agent-skills/config.json`. The CLI creates a default config file on first invocation if it does not exist. The first live use also downloads the Python dependencies into the skill's private environment. `--dry-run` does not require a key, network access, or installed dependencies.
 
 ## Quick start (from the project root)
 Set a path to the skill CLI:
@@ -56,12 +56,12 @@ python "$IMAGE_GEN" edit \
 ## Guardrails
 - Use the bundled CLI directly (`python "$IMAGE_GEN" ...`); it provisions and selects its isolated environment automatically for live calls.
 - Do **not** create one-off runners (for example `gen_images.py`) unless the user explicitly asks for a custom wrapper.
-- The local CLI accepts `GPT_IMAGE_BASE_URL`, `GPT_IMAGE_API_KEY`, and `GPT_IMAGE_MODEL`; CLI flags can override each value. See `references/api-compatibility.md`.
+- The local CLI reads `base_url`, `api_key`, and `model` from `~/.agent-skills/config.json`; CLI flags can override each value. See `references/api-compatibility.md`.
 - Do not silently downgrade from `gpt-image-2` to `gpt-image-1.5`; ask first unless the user explicitly requested `gpt-image-1.5`.
 
 ## Defaults
 - Model: `gpt-image-2`
-- Default model family: GPT Image (`gpt-image-*`); compatible providers may use their own model identifiers through `GPT_IMAGE_MODEL`.
+- Default model family: GPT Image (`gpt-image-*`); compatible providers may use their own model identifiers through the config file's `model` field.
 - Size: `auto`
 - Quality: `medium`
 - Output format: `png`

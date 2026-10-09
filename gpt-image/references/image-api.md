@@ -87,13 +87,9 @@ Use CLI `gpt-image-1.5` with `background=transparent` and a transparent-capable 
 
 ## Custom OpenAI-compatible endpoint
 
-Set these values for the CLI:
+Set `api_key`, `base_url`, and `model` in `~/.agent-skills/config.json`. The default API root is `https://api.openai.com/v1`; do not append `/images/generations` or `/images/edits`. The key is sent as `Authorization: Bearer <key>`, and the default model is `gpt-image-2`.
 
-- `GPT_IMAGE_BASE_URL`: API root, default `https://api.openai.com/v1`; do not append `/images/generations` or `/images/edits`.
-- `GPT_IMAGE_API_KEY`: key sent as `Authorization: Bearer <key>`. It takes precedence over `OPENAI_API_KEY`.
-- `GPT_IMAGE_MODEL`: default model identifier, overriding `gpt-image-2` when set.
-
-The CLI also accepts `--base-url`, `--api-key`, and `--model`. Custom providers may not support every GPT Image option; consult their API documentation and use their supported values.
+The CLI also accepts `--base-url`, `--api-key`, and `--model` overrides. Custom providers may not support every GPT Image option; consult their API documentation and use their supported values.
 
 ## Important boundary
 - `quality`, `input_fidelity`, explicit masks, `background`, `output_format`, and related parameters are CLI/API execution controls.
