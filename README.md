@@ -15,7 +15,7 @@
 本项目可通过 Vercel `skills` CLI 从 GitHub 直接安装：
 
 ```bash
-npx skills add kywrl/ai-image-generation --skill gpt-image
+npx skills add kywrl/agent-skills --skill gpt-image
 ```
 
 ## 环境要求
